@@ -27,6 +27,6 @@ function sendLine() {
     if (line == "0") {
         client.end()
     }else{
-        client.write(line)
+        client.write(line + "\n")
     }
 }

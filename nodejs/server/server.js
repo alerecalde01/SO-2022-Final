@@ -23,7 +23,7 @@ server.on('connection', (socket)=>{
         if (line == "0"){
             socket.end()
         }else{
-            socket.write(line)
+            socket.write(line + "\n")
         }
     
     }

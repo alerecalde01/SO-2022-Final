@@ -15,7 +15,7 @@ loop {
         var = 0
         while var < 10                              #Creamos el loop infinito
             enviar = gets.chomp
-            client.puts "Servidor: " + enviar  #Enviamos el mensaje al cliente
+            client.puts enviar  #Enviamos el mensaje al cliente
             mensaje_cliente = "Cliente: " + client.gets           #Obtenemos el mensaje del cliente
             puts   mensaje_cliente                    #Mostramos el mensaje del cliente
             print "Servidor: "

@@ -2,13 +2,23 @@ import java.net.*;
 import java.io.*;
 import java.util.Scanner;
 
-public class servidor{
+public class server{
     static int PUERTO = 4000;
     ServerSocket sc;
     Socket so;
     DataOutputStream salida;
     DataInputStream entrada;
     String mensajeRecibido;
+
+    /**
+     * 
+     */
+
+//     BufferedReader d
+// = new BufferedReader(new InputStreamReader(in));
+
+
+
 
     public void initServidor(){
         
@@ -20,12 +30,13 @@ public class servidor{
             System.out.println("Corriendo servidor en  " + PUERTO);
             so = sc.accept();
             System.out.println("Coexion establecida\n");
-            entrada = new DataInputStream(so.getInputStream());
+            BufferedReader d = new BufferedReader(new InputStreamReader(System.in));
             salida = new DataOutputStream(so.getOutputStream());
             String msn = "";
+
             while(!msn.equals("x")){
                 
-                mensajeRecibido = entrada.readUTF();//Leemos respuesta
+                mensajeRecibido = d.readLine();//Leemos respuesta
                 System.out.println("Cliente: " + mensajeRecibido);
                 System.out.println("Servidor: ");
                 msn = teclado.nextLine();
@@ -34,13 +45,12 @@ public class servidor{
             }
             sc.close();
         }catch(Exception e){
-
+                
         }
     }
 
     public static void main(String[] args){
-        servidor o = new servidor();
+        server o = new server();
         o.initServidor();
     }
-
 }

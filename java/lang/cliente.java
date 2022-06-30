@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class cliente{
     static String HOST = "localhost";
-    static int PUERTO = 5000;
+    static int PUERTO = 4000;
     Socket sc;
     DataOutputStream salida;
     DataInputStream entrada;
