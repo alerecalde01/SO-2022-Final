@@ -18,11 +18,11 @@ public class cliente{
             entrada = new DataInputStream(sc.getInputStream());
             String msn = "";
             while(!msn.equals("x")){
-                System.out.println("Escriba un msn para enviar");
+                System.out.println("Cliente: ");
                 msn = teclado.nextLine();
                 salida.writeUTF(msn);//enviamos mensaje
                 mensajeRecibido = entrada.readUTF();//Leemos respuesta
-                System.out.println(mensajeRecibido);
+                System.out.println("Servidor: " + mensajeRecibido);
             }
             
             sc.close();

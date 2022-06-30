@@ -10,9 +10,9 @@ server.on('connection', (socket)=>{
         sendLine()
     })
 
-    // socket.on('close', ()=>{
-    //     console.log('Comunicación finalizada')
-    // })
+    socket.on('close', ()=>{
+        console.log('Conexion finalizada')
+    })
 
     socket.on('error', (err)=>{
         console.log(err.message)
@@ -31,5 +31,5 @@ server.on('connection', (socket)=>{
 })
 
 server.listen(4000, ()=>{
-    console.log('servidor esta escuchando en la puerta', server.address().port)
+    console.log('Contado en puerto: ', server.address().port)
 })

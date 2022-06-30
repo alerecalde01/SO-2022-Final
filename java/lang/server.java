@@ -3,7 +3,7 @@ import java.io.*;
 import java.util.Scanner;
 
 public class servidor{
-    static int PUERTO = 5000;
+    static int PUERTO = 4000;
     ServerSocket sc;
     Socket so;
     DataOutputStream salida;
@@ -17,19 +17,19 @@ public class servidor{
             sc = new ServerSocket(PUERTO);
             so = new Socket();
             
-            System.out.println("Esperando conexión...");
+            System.out.println("Corriendo servidor en  " + PUERTO);
             so = sc.accept();
-            System.out.println("Se conecto uno...");
+            System.out.println("Coexion establecida\n");
             entrada = new DataInputStream(so.getInputStream());
             salida = new DataOutputStream(so.getOutputStream());
             String msn = "";
             while(!msn.equals("x")){
                 
                 mensajeRecibido = entrada.readUTF();//Leemos respuesta
-                System.out.println(mensajeRecibido);
-                System.out.println("Escriba un msn para enviar");
+                System.out.println("Cliente: " + mensajeRecibido);
+                System.out.println("Servidor: ");
                 msn = teclado.nextLine();
-                salida.writeUTF(""+msn);//enviamos mensaje
+                salida.writeUTF(msn);//enviamos mensaje
 
             }
             sc.close();
