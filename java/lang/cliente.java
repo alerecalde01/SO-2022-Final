@@ -1,39 +1,63 @@
-import java.net.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.Scanner;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Calendar;
 
-public class cliente{
-    static String HOST = "localhost";
-    static int PUERTO = 4000;
-    Socket sc;
-    DataOutputStream salida;
-    DataInputStream entrada;
-    String mensajeRecibido;
+public class cliente {
+    public static void main(String[] args){
+        final Socket clientSocket; // socket utilizado para enviar y revicir información del server
+        final BufferedReader in;   // Se utiliza para leer datos del socket
+        final PrintWriter out;     // Se utiliza para escribir datos del socket
+        final Scanner sc = new Scanner(System.in); // Lee lo escrito por teclado
 
-    public void initCliente(){
-        Scanner teclado = new Scanner(System.in);
-        try{
-            sc = new Socket(HOST, PUERTO);
-            salida = new DataOutputStream(sc.getOutputStream());
-            entrada = new DataInputStream(sc.getInputStream());
-            String msn = "";
-            while(!msn.equals("x")){
-                System.out.println("Cliente: ");
-                msn = teclado.nextLine();
-                salida.writeUTF(msn);//enviamos mensaje
-                mensajeRecibido = entrada.readUTF();//Leemos respuesta
-                System.out.println("Servidor: " + mensajeRecibido);
-            }
+        try {
+            String hostname = "localhost";
+            int port = 4000;
+            clientSocket = new Socket(hostname,port);
+            System.out.println("Conexion establecida\n");
+            out = new PrintWriter(clientSocket.getOutputStream());
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             
-            sc.close();
-        }catch(Exception e){
-
+            Thread sender = new Thread(new Runnable() {
+                String msg;
+                @Override
+                public void run() {
+                    while(true){
+                        msg = sc.nextLine();
+                        out.println(msg);
+                        out.flush();
+                    }
+                }
+            });
+            sender.start();
+            Thread receiver = new Thread(new Runnable() {
+                String msg;
+                @Override
+                public void run() {
+                    try {
+                        msg = in.readLine();
+                        while(msg!=null){
+                            System.out.println("Servidor: " + msg);
+                            msg = in.readLine();
+                        }
+                        System.out.println("Servidor fuera de servicio");
+                        out.close();
+                        clientSocket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            receiver .start();
+    }catch (IOException e){
+        e.printStackTrace();
         }
     }
-
-    public static void main(String[] args){
-        cliente o = new cliente();
-        o.initCliente();
-    }
-
 }
+

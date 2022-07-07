@@ -7,7 +7,7 @@ server = TCPServer.open(host,puerto)                     #Obtenemos el puerto de
 puts "Servidor conectado en el #{puerto}..."
 loop {
     Thread.start(server.accept) do |client|         #Conectamos el servidor
-        
+        puts "Conexion establecida"
         mensaje_cliente = client.gets               #Obtenemos el mensaje del cliente
         puts "\nCliente: " + mensaje_cliente                        #Mostramos el mensaje en consola
         

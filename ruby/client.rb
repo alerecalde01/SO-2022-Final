@@ -5,14 +5,15 @@ port = 4000            #Indicamos el puerto
 
 conexion= TCPSocket.open(hostname, port) #Abrimos la conexion
 
-print "Cliente: "
 
-loop do                 #Comenzamos el loop
+
+loop do
+    print "\nCliente: "                 #Comenzamos el loop
     mensaje = gets
     conexion.puts mensaje  #Enviamos el mensaje al servidor
     mensaje_servidor = conexion.gets          #Obtenemos el mensaje del servidor
-    puts  "Cliente: " + mensaje_servidor                    #Mostramos el mensaje en consola
-    "Servido: "
+    puts  "\nServidor: " + mensaje_servidor                    #Mostramos el mensaje en consola
+    
 end
 
 

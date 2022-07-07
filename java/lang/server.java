@@ -1,56 +1,65 @@
-import java.net.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Scanner;
 
-public class server{
-    static int PUERTO = 4000;
-    ServerSocket sc;
-    Socket so;
-    DataOutputStream salida;
-    DataInputStream entrada;
-    String mensajeRecibido;
-
-    /**
-     * 
-     */
-
-//     BufferedReader d
-// = new BufferedReader(new InputStreamReader(in));
-
-
-
-
-    public void initServidor(){
-        
-        Scanner teclado = new Scanner(System.in);
-        try{
-            sc = new ServerSocket(PUERTO);
-            so = new Socket();
-            
-            System.out.println("Corriendo servidor en  " + PUERTO);
-            so = sc.accept();
-            System.out.println("Coexion establecida\n");
-            BufferedReader d = new BufferedReader(new InputStreamReader(System.in));
-            salida = new DataOutputStream(so.getOutputStream());
-            String msn = "";
-
-            while(!msn.equals("x")){
-                
-                mensajeRecibido = d.readLine();//Leemos respuesta
-                System.out.println("Cliente: " + mensajeRecibido);
-                System.out.println("Servidor: ");
-                msn = teclado.nextLine();
-                salida.writeUTF(msn);//enviamos mensaje
-
-            }
-            sc.close();
-        }catch(Exception e){
-                
-        }
-    }
-
+public class server {
     public static void main(String[] args){
-        server o = new server();
-        o.initServidor();
+        final ServerSocket serverSocket ;
+        final Socket clientSocket ;
+        final BufferedReader in;
+        final PrintWriter out;
+        final Scanner sc = new Scanner(System.in);
+
+        try {
+            serverSocket = new ServerSocket(4000);
+            System.out.println("Servidor corriendo.. " );
+            clientSocket = serverSocket.accept();
+            System.out.println("Conexion establecida\n");
+            out = new PrintWriter(clientSocket.getOutputStream());
+            in = new BufferedReader (new InputStreamReader(clientSocket.getInputStream()));
+
+            Thread sender = new Thread(new Runnable() {
+                String msg; // Variable que contiene los datos ingresados por el cliente
+                @Override
+                public void run() {
+                    while(true){
+                        msg = sc.nextLine(); // Permite leer los datos ingresados por el cliente a través del teclado
+                        out.println(msg);
+                        out.flush();   // Fuerza el envío e impresión de los datos en el socket
+                    }
+                }
+            });
+            sender.start();
+
+            Thread receive = new Thread(new Runnable() {
+                String msg;
+                @Override
+                public void run() {
+                    try {
+                        msg = in.readLine();
+                        // Loop que se ejecuta siempre que el cliente esté conectado
+                        while(msg != null){
+                            System.out.println("Cliente: " + msg);
+                            msg = in.readLine();
+                        }
+
+                        System.out.println("El Cliente se ha desconectado");
+
+                        out.close();
+                        clientSocket.close();
+                        serverSocket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            receive.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
